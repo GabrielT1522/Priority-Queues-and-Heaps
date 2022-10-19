@@ -6,20 +6,31 @@
 
 #ifndef PRIORITYQUEUE_H
 #define PRIORITYQUEUE_H
+#include "Node.h"
 #include <exception>
+#include <iostream>
 using namespace std;
 
 template <class Type> class PriorityQueue {
 private:
-  // data here
+  Node<Type> *front, *rear;
+  int count;
+
 public:
   PriorityQueue(void);
   // Performs an insertion of "n" items from dataArray
   // into the priority queue
   PriorityQueue(Type *dataArray, int n);
   ~PriorityQueue(void);
-  bool isEmpty(void);
-  int size(void);
+  bool isEmpty() {
+    if (count == 0)
+      return true;
+    else
+      return false;
+  };
+  int size() {
+    return count;
+  };
   // inserts a piece of data into the priority queue
   void insertItem(Type data);
   // removes and returns the minimum value in the queue
