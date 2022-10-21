@@ -1,5 +1,5 @@
 // CSCE 3301 - Algorithms and Data Structures
-// PriorityQueue.h
+// UnsortedPQ.h
 // Priority Queues and Heaps
 //
 // Created by Gabriel Torres on 10/14/22.
@@ -57,31 +57,56 @@ public:
   };
   // removes and returns the minimum value in the queue
   // throws an exception if the queue is empty
-  Type removeMin(void) throw(exception) {
-    auto *itr = front;
-    int min = minValue();
+  Type removeMin(void){
 
-    //cout << "\nAfter: " << itr->element << endl;
-    while (itr != NULL && min != itr->element) {
-      itr = itr->next;
-      if (min == itr->element) {
-        if (front == rear) {
-          front == rear == NULL;
-        } else {
-          itr->next = itr->prev;
-          // rear->next = NULL;
-          //delete (itr);
-        }
-        count--;
-      }
+    if (isEmpty()) {
+      cout << "Prority Queue is Empty.";
+      return 0;
     }
-    return min;
-  };
-  // return the minimum value in the queue without removing it
-  // throws an exception if the queue is empty
-  Type minValue(void) throw(exception) {
+
     Type min = 100;
     auto *itr = front;
+    auto *tmp = itr;
+    while (itr != NULL) {
+      if (min > itr->element) {
+        min = itr->element;
+        tmp = itr;
+      }
+      itr = itr->next;
+    }
+
+    if (tmp->element == min) {
+      if (front == rear) {
+        front == rear == NULL;
+      } else if (tmp->prev == NULL) {
+        front = front->next;
+        front->prev = NULL;
+      } else if (tmp->next == NULL) {
+        rear = rear->prev;
+        rear->next = NULL;
+      } else {
+        (tmp->next)->prev = tmp->prev;
+        (tmp->prev)->next = tmp->next;
+        free(tmp);
+      }
+      count--;
+    }
+
+    return min;
+  };
+
+  // return the minimum value in the queue without removing it
+  // throws an exception if the queue is empty
+  Type minValue(void){
+
+    if (isEmpty()) {
+      cout << "Prority Queue is Empty.\n";
+      return 0;
+    }
+
+    Type min = 100;
+    auto *itr = front;
+
     while (itr != NULL) {
       if (min > itr->element) {
         min = itr->element;
@@ -90,5 +115,18 @@ public:
     }
     return min;
   };
+
+  void printUnsortedPQ() {
+    if (isEmpty()) {
+      cout << "Prority Queue is Empty.\n";
+      return;
+    }
+    auto *itr = front;
+    while (itr != NULL) {
+      cout << itr->element << " ";
+      itr = itr->next;
+    }
+    cout << endl;
+  }
 };
 #endif
