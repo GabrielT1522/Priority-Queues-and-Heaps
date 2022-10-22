@@ -6,6 +6,7 @@
 
 #include "SortedPQ.h"
 #include "UnsortedPQ.h"
+#include "HeapPQ.h"
 #include <fstream>
 #include <iostream>
 using namespace std;
@@ -38,6 +39,20 @@ template <class Type> void testSortedPQ(Type *dataArray, int n) {
   cout << "mySPQ.minValue(): " << mySPQ.minValue() << endl;
 }
 
+template <class Type> void testHeapPQ(Type *dataArray, int n) {
+  HeapPQ<int> myHPQ(dataArray, n);
+  cout << "myHPQ.isEmpty(): " << myHPQ.isEmpty() << endl;
+  cout << "myHPQ.size(): " << myHPQ.size() << endl;
+  cout << "myHPQ.printHeapPQ(): ";
+  myHPQ.printHeapPQ();
+  cout << "myHPQ.minValue(): " << myHPQ.minValue() << endl;
+  cout << "myHPQ.removeMin(): " << myHPQ.removeMin() << endl;
+  cout << "myHPQ.size(): " << myHPQ.size() << endl;
+  cout << "myHPQ.printHeapPQ(): ";
+  myHPQ.printHeapPQ();
+  cout << "myHPQ.minValue(): " << myHPQ.minValue() << endl;
+}
+
 string PQTypeName(int qType) {
   if (qType == 0) {
     return "Unsorted Priority Queue";
@@ -54,13 +69,12 @@ int main() {
   int PQType, n;
   srand(time(NULL));   // Initiate random generator seed
   PQType = rand() % 3; // First random number is either 0, 1, or 2
-  n = rand() % 21 + 1; // Second random number is between 1 and 20
-  
+  n = rand() % 20 + 2; // Second random number is between 1 and 20
   ofstream outFile("numbers.txt");
   outFile << PQType << endl << n << endl;
   // Insert n random numbers between 1 and 100 into the file
   for (int i = 0; i < n; i++) {
-    outFile << rand() % 101 + 1 << endl;
+    outFile << rand() % 100 + 1 << endl;
   }
   outFile.close();
 
@@ -83,7 +97,7 @@ int main() {
     testSortedPQ(dataArray, n);
     break;
   case 2:
-    cout << "Heap Priority Queue has not been implemented yet.\n";
+    testHeapPQ(dataArray, n);
     break;
   default:
     break;

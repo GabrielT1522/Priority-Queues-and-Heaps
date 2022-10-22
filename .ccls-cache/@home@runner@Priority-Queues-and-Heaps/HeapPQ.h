@@ -10,84 +10,89 @@
 #include <iostream>
 using namespace std;
 
-class entry {
-public:
-  int key;
-  int value;
-};
-
-class ListNode {
-public:
-  entry *entryExample;
-  ListNode *next, *prev;
-};
-
-class HeapPQ {
+template <class Type> class HeapPQ {
 private:
-  ListNode *front, *rear;
+  // Initialize max size of heapArray
+  const static int MAX = 22;
+  int heapArray[MAX];
+  int heapArraySize;
   int count;
 
 public:
-  HeapPQ(void) {
+  HeapPQ(int dataArray[], int n) {
     count = 0;
-    front = NULL;
-    rear = NULL;
-  };
-  // Performs an insertion of "n" items from dataArray
-  // into the priority queue
-  HeapPQ(int *dataArray, int n) {
-    count = 0;
-    front = NULL;
-    rear = NULL;
+    heapArraySize = n;
     for (int i = 0; i < n; i++) {
       insertItem(dataArray[i]);
     }
   };
   ~HeapPQ(void) { cout << "\nHeap Priority Queue has been deconstructed.\n"; };
+
+  int size() { return count; }
+
   bool isEmpty() {
     if (size() == 0)
       return true;
     else
       return false;
-  };
-  int size() { return count; };
-  // inserts a piece of data into the priority queue
-  void put(int key, int value) {
-    ListNode *itr = front->next;
-    while (itr->next != rear) {
-      if ((itr->entryExample)->key == key) {
-        (itr->entryExample)->value = value;
-        return;
-      }
-      itr = itr->next;
-    }
-    // entry with the same key doesn not exist
-    // new to create a new node
-    entry *newEntry = new entry();
-    newEntry->key = key;
-    newEntry->value = value;
+  }
 
-    ListNode *newNode = new ListNode();
-    newNode->entryExample = newEntry;
-    
-    ListNode *lastNode = rear->prev;
+  int parent(int index) { return (index - 1) / 2; }
 
-    newNode->prev = lastNode;
-    newNode->next = rear;
-    lastNode->next = newNode;
-    rear->prev = newNode;
+  int rightChild(int index) { return (2 * index) + 2; }
+
+  int leftChild(int index) { return (2 * index) + 1; }
+
+  void swap(int *x, int *y) {
+    int tmp = *x;
+    *x = *y;
+    *y = tmp;
+  }
+
+  void insertItem(int item) {
+    heapArray[count] = item;
     count++;
+    
+    int index = count - 1;
+    while (index != 0 && heapArray[parent(index)] > heapArray[index]) {
+      swap(&heapArray[parent(index)], &heapArray[index]);
+      index = parent(index);
+    }
   };
-  // removes and returns the minimum value in the queue
-  // throws an exception if the queue is empty
-  int removeMin(void){
 
+  void minHeap(int index) {
+    int left = leftChild(index);
+    int right = rightChild(index);
+    int min = index;
+
+    if (left <= count && heapArray[right] < heapArray[min]) {
+      min = left;
+    }
+    if (right <= count && heapArray[right] < heapArray[min]) {
+      min = left;
+    }
+
+    if (min != index) {
+      int tmp = heapArray[index];
+      heapArray[index] = heapArray[min];
+      heapArray[min] = tmp;
+      minHeap(min);
+    }
   };
 
-  // return the minimum value in the queue without removing it
-  // throws an exception if the queue is empty
-  int minValue(void){
-
+  Type removeMin() {
+    int min = minValue();
+    heapArray[0] = heapArray[count - 1];
+    count--;
+    minHeap(0);
+    return min;
   };
+  Type minValue() { return heapArray[0]; }
+  void printHeapPQ() {
+    for (int i = 0; i < heapArraySize; i++) {
+      cout << heapArray[i] << " ";
+    }
+    cout << endl;
+  }
 };
 #endif
